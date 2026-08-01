@@ -116,9 +116,4 @@ func _update_start_button() -> void:
 		if TeamManager.get_player_team(peer_id) == -1:
 			all_assigned = false
 			break
-	var all_teams_staffed := not TeamManager.teams.is_empty()
-	for team_id in TeamManager.teams:
-		if TeamManager.teams[team_id]["members"].is_empty():
-			all_teams_staffed = false
-			break
-	start_button.disabled = not (all_assigned and all_teams_staffed)
+	start_button.disabled = not all_assigned
