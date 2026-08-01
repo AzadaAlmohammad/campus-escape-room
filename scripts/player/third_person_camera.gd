@@ -8,7 +8,7 @@ extends Node3D
 
 func _ready() -> void:
 	spring_arm.spring_length = 4.0
-	spring_arm.add_excluded_object(get_parent())
+	spring_arm.add_excluded_object(get_parent().get_rid())
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not get_parent().is_multiplayer_authority():
