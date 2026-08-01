@@ -55,6 +55,14 @@ text = "Beitreten"
 layout_mode = 2
 text = ""
 
+[node name="ServerListLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Gefundene Server (Doppelklick zum Beitreten):"
+
+[node name="ServerList" type="ItemList" parent="VBoxContainer"]
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 2
+
 [node name="PlayerList" type="ItemList" parent="VBoxContainer"]
 custom_minimum_size = Vector2(300, 200)
 layout_mode = 2
