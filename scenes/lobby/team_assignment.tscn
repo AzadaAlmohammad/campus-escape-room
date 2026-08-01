@@ -1,0 +1,101 @@
+[gd_scene load_steps=2 format=3 uid="uid://bqf8n2k5p3wtx"]
+
+[ext_resource type="Script" path="res://scripts/ui/team_assignment_ui.gd" id="1_team_assign"]
+
+[node name="TeamAssignment" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_team_assign")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(600, 400)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -200.0
+offset_right = 300.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 12
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+horizontal_alignment = 1
+text = "Team-Zuweisung"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="TeamColumn0" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TeamLabel0" type="Label" parent="VBoxContainer/HBoxContainer/TeamColumn0"]
+layout_mode = 2
+horizontal_alignment = 1
+text = "Alpha - Cafeteria"
+
+[node name="TeamList0" type="ItemList" parent="VBoxContainer/HBoxContainer/TeamColumn0"]
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TeamColumn1" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TeamLabel1" type="Label" parent="VBoxContainer/HBoxContainer/TeamColumn1"]
+layout_mode = 2
+horizontal_alignment = 1
+text = "Beta - Mensa"
+
+[node name="TeamList1" type="ItemList" parent="VBoxContainer/HBoxContainer/TeamColumn1"]
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TeamColumn2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TeamLabel2" type="Label" parent="VBoxContainer/HBoxContainer/TeamColumn2"]
+layout_mode = 2
+horizontal_alignment = 1
+text = "Gamma - T002"
+
+[node name="TeamList2" type="ItemList" parent="VBoxContainer/HBoxContainer/TeamColumn2"]
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TeamColumn3" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TeamLabel3" type="Label" parent="VBoxContainer/HBoxContainer/TeamColumn3"]
+layout_mode = 2
+horizontal_alignment = 1
+text = "Delta - Exterior"
+
+[node name="TeamList3" type="ItemList" parent="VBoxContainer/HBoxContainer/TeamColumn3"]
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="AutoAssignButton" type="Button" parent="VBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(160, 40)
+layout_mode = 2
+text = "Auto-Zuweisen"
