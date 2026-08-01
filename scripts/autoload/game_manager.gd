@@ -20,6 +20,8 @@ func start_game() -> void:
 		return
 	_change_state.rpc(GameState.LOADING)
 	for team_id in TeamManager.teams:
+		if TeamManager.get_team_members(team_id).is_empty():
+			continue
 		var room_id: String = TeamManager.teams[team_id]["room_id"]
 		_load_room_for_team.rpc(team_id, room_id)
 	await get_tree().create_timer(2.0).timeout
@@ -29,15 +31,22 @@ func start_game() -> void:
 @rpc("authority", "reliable", "call_local")
 func _load_room_for_team(team_id: int, room_id: String) -> void:
 	var my_team := TeamManager.get_player_team(multiplayer.get_unique_id())
-	if my_team == team_id:
-		var room_path := "res://scenes/rooms/%s.tscn" % room_id
-		if ResourceLoader.exists(room_path):
-			var room_scene := load(room_path) as PackedScene
-			var room := room_scene.instantiate()
-			get_tree().root.add_child(room)
-		var lobby := get_tree().get_first_node_in_group("lobby")
-		if lobby:
-			lobby.queue_free()
+	if my_team != team_id:
+		return
+	var room_path := "res://scenes/rooms/%s.tscn" % room_id
+	if not ResourceLoader.exists(room_path):
+		push_error("Room scene not found: %s" % room_path)
+		return
+	var room_scene := load(room_path) as PackedScene
+	var room := room_scene.instantiate()
+	get_tree().root.add_child(room)
+	var lobby := get_tree().get_first_node_in_group("lobby")
+	if lobby:
+		lobby.queue_free()
+	if ResourceLoader.exists("res://scenes/hud.tscn"):
+		var hud_scene := load("res://scenes/hud.tscn") as PackedScene
+		var hud := hud_scene.instantiate()
+		get_tree().root.add_child(hud)
 
 @rpc("authority", "reliable", "call_local")
 func _change_state(new_state: int) -> void:
@@ -92,4 +101,9 @@ func check_team_escape(team_id: int) -> void:
 			_change_state.rpc(GameState.FINISHED)
 
 func _all_teams_escaped() -> bool:
-	return TeamManager.teams.values().all(func(t): return t["escaped"])
+	for team in TeamManager.teams.values():
+		if team["members"].is_empty():
+			continue
+		if not team["escaped"]:
+			return false
+	return true
