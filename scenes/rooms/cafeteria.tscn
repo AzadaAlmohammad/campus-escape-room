@@ -1,30 +1,103 @@
-[gd_scene load_steps=12 format=3 uid="uid://vse5gqzaqql2a"]
+[gd_scene load_steps=31 format=3 uid="uid://vse5gqzaqql2a"]
 
 [ext_resource type="Script" path="res://scripts/rooms/room_base.gd" id="1_room"]
 [ext_resource type="Script" path="res://scripts/interaction/pickup_item.gd" id="2_pickup"]
 [ext_resource type="Script" path="res://scripts/interaction/door.gd" id="3_door"]
 [ext_resource type="PackedScene" path="res://scenes/puzzles/keypad_puzzle.tscn" id="4_keypad_scene"]
-[ext_resource type="Script" path="res://scripts/inventory/item_data.gd" id="5_item"]
-[ext_resource type="PackedScene" path="res://assets/buildings/cafeteria.glb" id="6_building"]
-[ext_resource type="PackedScene" path="res://assets/buildings/cafeteria_collision.glb" id="7_collision"]
+[ext_resource type="Resource" path="res://resources/items/note_code_4719.tres" id="5_note"]
+[ext_resource type="Resource" path="res://resources/items/fuse_cafeteria.tres" id="6_fuse"]
+[ext_resource type="Resource" path="res://resources/items/sheet_music.tres" id="7_sheet"]
+[ext_resource type="PackedScene" path="res://assets/buildings/cafeteria.glb" id="8_building"]
+[ext_resource type="PackedScene" path="res://assets/buildings/cafeteria_collision.glb" id="9_collision"]
+[ext_resource type="Script" path="res://scripts/puzzles/sequence_puzzle.gd" id="10_seqpuzzle"]
+[ext_resource type="Script" path="res://scripts/puzzles/sequence_key.gd" id="11_seqkey"]
+[ext_resource type="Script" path="res://scripts/puzzles/object_placement_puzzle.gd" id="12_placepuzzle"]
+[ext_resource type="Script" path="res://scripts/interaction/placement_socket.gd" id="13_socket"]
+[ext_resource type="PackedScene" path="res://assets/objects/equipment/getraenkautomat.glb" id="15_automat"]
+[ext_resource type="PackedScene" path="res://assets/objects/furniture/Schrank.glb" id="19_schrank"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat_caf"]
+sky_top_color = Color(0.35, 0.46, 0.71, 1)
+sky_horizon_color = Color(0.65, 0.66, 0.67, 1)
+ground_bottom_color = Color(0.2, 0.17, 0.13, 1)
+ground_horizon_color = Color(0.65, 0.66, 0.67, 1)
+
+[sub_resource type="Sky" id="Sky_caf"]
+sky_material = SubResource("SkyMat_caf")
 
 [sub_resource type="Environment" id="Environment_caf1"]
-ambient_light_source = 2
-ambient_light_color = Color(0.3, 0.3, 0.35, 1)
-ambient_light_energy = 0.6
+background_mode = 2
+sky = SubResource("Sky_caf")
+ambient_light_source = 3
+ambient_light_energy = 0.7
+tonemap_mode = 2
+ssao_enabled = true
+glow_enabled = true
+glow_intensity = 0.4
+glow_bloom = 0.1
 
 [sub_resource type="BoxMesh" id="BoxMesh_note"]
-size = Vector3(0.2, 0.01, 0.15)
+size = Vector3(0.25, 0.02, 0.18)
+
+[sub_resource type="StandardMaterial3D" id="Mat_note"]
+albedo_color = Color(0.95, 0.93, 0.8, 1)
+emission_enabled = true
+emission = Color(0.95, 0.93, 0.8, 1)
+emission_energy_multiplier = 0.15
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_note"]
-size = Vector3(0.2, 0.01, 0.15)
+size = Vector3(0.4, 0.15, 0.35)
 
-[sub_resource type="Resource" id="Resource_note_item"]
-script = ExtResource("5_item")
-item_id = &"note_cafeteria_code"
-item_name = "Notiz mit Code"
-description = "Eine zerknitterte Notiz: \"4-7-1-9\""
-is_key_item = false
+[sub_resource type="BoxMesh" id="BoxMesh_door"]
+size = Vector3(1.2, 2.2, 0.12)
+
+[sub_resource type="StandardMaterial3D" id="Mat_door"]
+albedo_color = Color(0.45, 0.3, 0.18, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_door"]
+size = Vector3(1.2, 2.2, 0.12)
+
+[sub_resource type="BoxMesh" id="BoxMesh_key"]
+size = Vector3(0.35, 0.08, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_key"]
+size = Vector3(0.35, 0.12, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="Mat_key_red"]
+albedo_color = Color(0.85, 0.15, 0.15, 1)
+emission_enabled = true
+emission = Color(0.85, 0.15, 0.15, 1)
+emission_energy_multiplier = 0.35
+
+[sub_resource type="StandardMaterial3D" id="Mat_key_green"]
+albedo_color = Color(0.15, 0.75, 0.2, 1)
+emission_enabled = true
+emission = Color(0.15, 0.75, 0.2, 1)
+emission_energy_multiplier = 0.35
+
+[sub_resource type="StandardMaterial3D" id="Mat_key_blue"]
+albedo_color = Color(0.15, 0.35, 0.9, 1)
+emission_enabled = true
+emission = Color(0.15, 0.35, 0.9, 1)
+emission_energy_multiplier = 0.35
+
+[sub_resource type="StandardMaterial3D" id="Mat_key_yellow"]
+albedo_color = Color(0.95, 0.85, 0.1, 1)
+emission_enabled = true
+emission = Color(0.95, 0.85, 0.1, 1)
+emission_energy_multiplier = 0.35
+
+[sub_resource type="BoxMesh" id="BoxMesh_socket"]
+size = Vector3(0.3, 0.3, 0.15)
+
+[sub_resource type="StandardMaterial3D" id="Mat_socket"]
+albedo_color = Color(0.9, 0.5, 0.1, 1)
+emission_enabled = true
+emission = Color(0.9, 0.5, 0.1, 1)
+emission_energy_multiplier = 0.5
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_socket"]
+size = Vector3(0.5, 0.5, 0.4)
 
 [node name="CafeteriaRoom" type="Node3D" groups=["room_cafeteria"]]
 script = ExtResource("1_room")
@@ -37,61 +110,226 @@ team_id = 0
 environment = SubResource("Environment_caf1")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Environment"]
-rotation_degrees = Vector3(-45, -30, 0)
+rotation_degrees = Vector3(-40, -35, 0)
 shadow_enabled = true
-light_energy = 1.2
+light_energy = 1.0
+
+[node name="Omni1" type="OmniLight3D" parent="Environment"]
+position = Vector3(-8, 3.6, 0)
+light_energy = 2.0
+omni_range = 10.0
+light_color = Color(1, 0.95, 0.85, 1)
+
+[node name="Omni2" type="OmniLight3D" parent="Environment"]
+position = Vector3(-2, 3.6, 2)
+light_energy = 2.0
+omni_range = 10.0
+light_color = Color(1, 0.95, 0.85, 1)
+
+[node name="Omni3" type="OmniLight3D" parent="Environment"]
+position = Vector3(4, 3.6, -2)
+light_energy = 2.0
+omni_range = 10.0
+light_color = Color(1, 0.95, 0.85, 1)
+
+[node name="Omni4" type="OmniLight3D" parent="Environment"]
+position = Vector3(8, 3.6, 2)
+light_energy = 2.0
+omni_range = 10.0
+light_color = Color(1, 0.95, 0.85, 1)
 
 [node name="BuildingGeometry" type="Node3D" parent="."]
 
-[node name="BuildingModel" parent="BuildingGeometry" instance=ExtResource("6_building")]
+[node name="BuildingModel" parent="BuildingGeometry" instance=ExtResource("8_building")]
 
-[node name="CollisionModel" parent="BuildingGeometry" instance=ExtResource("7_collision")]
+[node name="CollisionModel" parent="BuildingGeometry" instance=ExtResource("9_collision")]
+
+[node name="Furniture" type="Node3D" parent="."]
+
+[node name="Schrank" parent="Furniture" instance=ExtResource("19_schrank")]
+position = Vector3(5.5, 1.05, 3.8)
+rotation_degrees = Vector3(0, 180, 0)
+scale = Vector3(0.3, 0.3, 0.3)
+
+[node name="Automat" parent="Furniture" instance=ExtResource("15_automat")]
+position = Vector3(9.8, 1, -5.5)
+scale = Vector3(0.45, 0.45, 0.45)
 
 [node name="Puzzles" type="Node3D" parent="."]
 
 [node name="KeypadPuzzle01" parent="Puzzles" instance=ExtResource("4_keypad_scene")]
 puzzle_id = "cafeteria_keypad_01"
 correct_code = "4719"
-position = Vector3(0, 1.2, 9.5)
+position = Vector3(5, 2.3, -5.3)
+
+[node name="AutomatPuzzle" type="Node3D" parent="Puzzles"]
+script = ExtResource("12_placepuzzle")
+puzzle_id = "cafeteria_automat_fuse"
+required_item_id = &"fuse_cafeteria"
+position = Vector3(9.8, 1, -5.5)
+
+[node name="Socket" type="StaticBody3D" parent="Puzzles/AutomatPuzzle"]
+collision_layer = 2
+position = Vector3(0, 1.2, 1.0)
+script = ExtResource("13_socket")
+display_name = "Getränkeautomat"
+interaction_prompt = "Sicherung einsetzen"
+required_item = ExtResource("6_fuse")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Puzzles/AutomatPuzzle/Socket"]
+mesh = SubResource("BoxMesh_socket")
+surface_material_override/0 = SubResource("Mat_socket")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Puzzles/AutomatPuzzle/Socket"]
+shape = SubResource("BoxShape3D_socket")
+
+[node name="PianoPuzzle" type="Node3D" parent="Puzzles"]
+script = ExtResource("10_seqpuzzle")
+puzzle_id = "cafeteria_piano_melody"
+correct_sequence = Array[int]([0, 2, 1, 3])
+position = Vector3(-9.5, 1, 3.5)
+
+[node name="Keys" type="Node3D" parent="Puzzles/PianoPuzzle"]
+
+[node name="KeyRed" type="StaticBody3D" parent="Puzzles/PianoPuzzle/Keys"]
+collision_layer = 2
+position = Vector3(-0.75, 1.25, 0)
+script = ExtResource("11_seqkey")
+element_index = 0
+display_name = "Rote Taste"
+interaction_prompt = "Taste spielen"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Puzzles/PianoPuzzle/Keys/KeyRed"]
+mesh = SubResource("BoxMesh_key")
+surface_material_override/0 = SubResource("Mat_key_red")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Puzzles/PianoPuzzle/Keys/KeyRed"]
+shape = SubResource("BoxShape3D_key")
+
+[node name="KeyGreen" type="StaticBody3D" parent="Puzzles/PianoPuzzle/Keys"]
+collision_layer = 2
+position = Vector3(-0.25, 1.25, 0)
+script = ExtResource("11_seqkey")
+element_index = 1
+display_name = "Grüne Taste"
+interaction_prompt = "Taste spielen"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Puzzles/PianoPuzzle/Keys/KeyGreen"]
+mesh = SubResource("BoxMesh_key")
+surface_material_override/0 = SubResource("Mat_key_green")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Puzzles/PianoPuzzle/Keys/KeyGreen"]
+shape = SubResource("BoxShape3D_key")
+
+[node name="KeyBlue" type="StaticBody3D" parent="Puzzles/PianoPuzzle/Keys"]
+collision_layer = 2
+position = Vector3(0.25, 1.25, 0)
+script = ExtResource("11_seqkey")
+element_index = 2
+display_name = "Blaue Taste"
+interaction_prompt = "Taste spielen"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Puzzles/PianoPuzzle/Keys/KeyBlue"]
+mesh = SubResource("BoxMesh_key")
+surface_material_override/0 = SubResource("Mat_key_blue")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Puzzles/PianoPuzzle/Keys/KeyBlue"]
+shape = SubResource("BoxShape3D_key")
+
+[node name="KeyYellow" type="StaticBody3D" parent="Puzzles/PianoPuzzle/Keys"]
+collision_layer = 2
+position = Vector3(0.75, 1.25, 0)
+script = ExtResource("11_seqkey")
+element_index = 3
+display_name = "Gelbe Taste"
+interaction_prompt = "Taste spielen"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Puzzles/PianoPuzzle/Keys/KeyYellow"]
+mesh = SubResource("BoxMesh_key")
+surface_material_override/0 = SubResource("Mat_key_yellow")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Puzzles/PianoPuzzle/Keys/KeyYellow"]
+shape = SubResource("BoxShape3D_key")
 
 [node name="PickupItems" type="Node3D" parent="."]
 
 [node name="NoteWithCode" type="StaticBody3D" parent="PickupItems"]
 collision_layer = 2
-position = Vector3(-4, 0.806, -6)
+position = Vector3(-5, 2.2, 3)
 script = ExtResource("2_pickup")
 display_name = "Notiz"
 interaction_prompt = "Aufheben"
-item_data = SubResource("Resource_note_item")
+item_data = ExtResource("5_note")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="PickupItems/NoteWithCode"]
 mesh = SubResource("BoxMesh_note")
+surface_material_override/0 = SubResource("Mat_note")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PickupItems/NoteWithCode"]
+shape = SubResource("BoxShape3D_note")
+
+[node name="Sicherung" type="StaticBody3D" parent="PickupItems"]
+collision_layer = 2
+position = Vector3(5.5, 2.3, 3.5)
+script = ExtResource("2_pickup")
+display_name = "Sicherung"
+interaction_prompt = "Aufheben"
+item_data = ExtResource("6_fuse")
+start_hidden = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PickupItems/Sicherung"]
+mesh = SubResource("BoxMesh_socket")
+surface_material_override/0 = SubResource("Mat_socket")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PickupItems/Sicherung"]
+shape = SubResource("BoxShape3D_socket")
+
+[node name="Notenblatt" type="StaticBody3D" parent="PickupItems"]
+collision_layer = 2
+position = Vector3(-5, 2.2, -3)
+script = ExtResource("2_pickup")
+display_name = "Notenblatt"
+interaction_prompt = "Aufheben"
+item_data = ExtResource("7_sheet")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PickupItems/Notenblatt"]
+mesh = SubResource("BoxMesh_note")
+surface_material_override/0 = SubResource("Mat_note")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PickupItems/Notenblatt"]
 shape = SubResource("BoxShape3D_note")
 
 [node name="Doors" type="Node3D" parent="."]
 
 [node name="ExitDoor" type="StaticBody3D" parent="Doors"]
 collision_layer = 2
-position = Vector3(0, 1.1, 9.9)
+position = Vector3(0, 2.1, 5.3)
 script = ExtResource("3_door")
 is_locked = true
 display_name = "Ausgangstür"
 interaction_prompt = "Tür öffnen"
 
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Doors/ExitDoor"]
+mesh = SubResource("BoxMesh_door")
+surface_material_override/0 = SubResource("Mat_door")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Doors/ExitDoor"]
+shape = SubResource("BoxShape3D_door")
+
 [node name="SpawnPoints" type="Node3D" parent="."]
 
 [node name="Spawn1" type="Marker3D" parent="SpawnPoints"]
-position = Vector3(2, 1, 2)
+position = Vector3(1, 2, 0)
 
 [node name="Spawn2" type="Marker3D" parent="SpawnPoints"]
-position = Vector3(-2, 1, 2)
+position = Vector3(-1, 2, 0)
 
 [node name="Spawn3" type="Marker3D" parent="SpawnPoints"]
-position = Vector3(2, 1, -2)
+position = Vector3(2, 2, 1)
 
 [node name="Spawn4" type="Marker3D" parent="SpawnPoints"]
-position = Vector3(-2, 1, -2)
+position = Vector3(-2, 2, 1)
 
 [node name="Players" type="Node3D" parent="."]
+
+[connection signal="puzzle_solved" from="Puzzles/KeypadPuzzle01" to="PickupItems/Sicherung" method="activate"]

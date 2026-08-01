@@ -15,7 +15,35 @@ func _ready() -> void:
 			if child is PuzzleBase:
 				puzzles.append(child)
 				child.puzzle_solved.connect(_on_puzzle_solved)
+	_generate_building_collision()
+	_generate_furniture_collision()
 	_ensure_player_spawner()
+
+func _generate_building_collision() -> void:
+	var collision_model := get_node_or_null("BuildingGeometry/CollisionModel")
+	if collision_model:
+		for mesh_instance in _find_mesh_instances(collision_model):
+			mesh_instance.create_trimesh_collision()
+			mesh_instance.visible = false
+		return
+	var building_model := get_node_or_null("BuildingGeometry/BuildingModel")
+	if building_model:
+		for mesh_instance in _find_mesh_instances(building_model):
+			mesh_instance.create_trimesh_collision()
+
+func _generate_furniture_collision() -> void:
+	var furniture := get_node_or_null("Furniture")
+	if furniture:
+		for mesh_instance in _find_mesh_instances(furniture):
+			mesh_instance.create_trimesh_collision()
+
+func _find_mesh_instances(node: Node) -> Array[MeshInstance3D]:
+	var result: Array[MeshInstance3D] = []
+	if node is MeshInstance3D:
+		result.append(node)
+	for child in node.get_children():
+		result.append_array(_find_mesh_instances(child))
+	return result
 
 func _ensure_player_spawner() -> void:
 	var spawner := get_node_or_null("PlayerSpawner")

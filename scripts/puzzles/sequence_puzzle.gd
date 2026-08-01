@@ -10,6 +10,8 @@ func add_to_sequence(element_index: int) -> void:
 	_sync_sequence.rpc(current_sequence)
 	if current_sequence.size() == correct_sequence.size():
 		attempt_solve(current_sequence)
+		if multiplayer.is_server() and not is_solved:
+			reset_sequence()
 	elif current_sequence.size() > correct_sequence.size():
 		reset_sequence()
 

@@ -28,6 +28,6 @@ func _spawn_player(data: Variant) -> Node:
 	var player_scene := preload("res://scenes/player/player.tscn")
 	var player := player_scene.instantiate()
 	player.name = str(data["peer_id"])
-	player.global_position = data["position"]
+	player.position = data["position"]
 	player.set_multiplayer_authority(data["peer_id"])
 	return player

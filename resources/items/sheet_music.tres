@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/inventory/item_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+item_id = &"sheet_music"
+item_name = "Notenblatt"
+description = "Ein handgeschriebenes Notenblatt: \"Spiele die Melodie: ROT - BLAU - GRÜN - GELB\""
+is_key_item = true
