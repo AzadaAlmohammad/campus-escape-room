@@ -28,7 +28,7 @@ func interact(player: CharacterBody3D) -> void:
 func _on_hint_received(from_team: int, message: String) -> void:
 	var team_name: String = TeamManager.TEAM_NAMES[from_team] if from_team < TeamManager.TEAM_NAMES.size() else "Unknown"
 	hint_messages.append("[Team %s]: %s" % [team_name, message])
-	_notify_new_hint.rpc()
+	_notify_new_hint()
 
 func _toggle_terminal_ui() -> void:
 	if terminal_ui == null:
