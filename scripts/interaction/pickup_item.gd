@@ -11,4 +11,5 @@ func interact(player: CharacterBody3D) -> void:
 
 @rpc("authority", "reliable", "call_local")
 func _despawn() -> void:
+	SfxManager.play("pickup")
 	queue_free()

@@ -20,6 +20,7 @@ run/main_scene="res://scenes/main.tscn"
 NetworkManager="*res://scripts/autoload/network_manager.gd"
 GameManager="*res://scripts/autoload/game_manager.gd"
 TeamManager="*res://scripts/autoload/team_manager.gd"
+SfxManager="*res://scripts/audio/sfx_manager.gd"
 
 [input]
 
