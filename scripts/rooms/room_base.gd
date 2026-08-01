@@ -15,6 +15,14 @@ func _ready() -> void:
 			if child is PuzzleBase:
 				puzzles.append(child)
 				child.puzzle_solved.connect(_on_puzzle_solved)
+	_ensure_player_spawner()
+
+func _ensure_player_spawner() -> void:
+	var spawner := get_node_or_null("PlayerSpawner")
+	if not spawner:
+		spawner = load("res://scripts/rooms/player_spawner.gd").new()
+		spawner.name = "PlayerSpawner"
+		add_child(spawner)
 
 func _on_puzzle_solved(puzzle_id: String) -> void:
 	if multiplayer.is_server():
