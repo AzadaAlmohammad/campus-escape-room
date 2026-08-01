@@ -1,0 +1,52 @@
+[gd_scene load_steps=9 format=3 uid="uid://eagnmcmbzvq21"]
+
+[ext_resource type="Script" path="res://scripts/interaction/cross_team_terminal.gd" id="1_ctt"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_body"]
+size = Vector3(0.5, 1.2, 0.3)
+
+[sub_resource type="BoxMesh" id="BoxMesh_body"]
+size = Vector3(0.5, 1.2, 0.3)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_body"]
+albedo_color = Color(0.12, 0.12, 0.14, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_screen"]
+size = Vector2(0.4, 0.6)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_screen"]
+albedo_color = Color(0.7, 0.9, 1.0, 1)
+emission_enabled = true
+emission = Color(0.4, 0.8, 1.0, 1)
+emission_energy_multiplier = 0.6
+
+[sub_resource type="SphereMesh" id="SphereMesh_status"]
+radius = 0.05
+height = 0.1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_status"]
+albedo_color = Color(0.1, 0.3, 0.6, 1)
+emission_enabled = true
+emission = Color(0.1, 0.3, 0.6, 1)
+emission_energy_multiplier = 1.0
+
+[node name="CrossTeamTerminal" type="StaticBody3D"]
+collision_layer = 2
+script = ExtResource("1_ctt")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_body")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_body")
+surface_material_override/0 = SubResource("StandardMaterial3D_body")
+
+[node name="Screen" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0.151)
+mesh = SubResource("PlaneMesh_screen")
+surface_material_override/0 = SubResource("StandardMaterial3D_screen")
+
+[node name="StatusLight" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.58, 0.1)
+mesh = SubResource("SphereMesh_status")
+surface_material_override/0 = SubResource("StandardMaterial3D_status")
