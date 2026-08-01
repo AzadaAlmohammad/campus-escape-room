@@ -1,6 +1,8 @@
 extends MultiplayerSpawner
 
 func _ready() -> void:
+	var players_node := get_parent().get_node("Players")
+	spawn_path = players_node.get_path()
 	spawn_function = _spawn_player
 	if multiplayer.is_server():
 		GameManager.state_changed.connect(_on_state_changed)
@@ -14,6 +16,8 @@ func _spawn_all_team_players() -> void:
 	if not room:
 		return
 	var team_members := TeamManager.get_team_members(room.team_id)
+	if team_members.is_empty():
+		return
 	var spawn_points := get_parent().get_node("SpawnPoints").get_children()
 	for i in range(team_members.size()):
 		var peer_id: int = team_members[i]
