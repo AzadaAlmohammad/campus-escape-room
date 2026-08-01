@@ -11,29 +11,23 @@ grow_vertical = 2
 script = ExtResource("1_team_assign")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
-custom_minimum_size = Vector2(600, 400)
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -300.0
-offset_top = -200.0
-offset_right = 300.0
-offset_bottom = 200.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 8
 
 [node name="Label" type="Label" parent="VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 22
 horizontal_alignment = 1
 text = "Team-Zuweisung"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 16
+size_flags_vertical = 3
+theme_override_constants/separation = 8
 
 [node name="TeamColumn0" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -45,7 +39,6 @@ horizontal_alignment = 1
 text = "Alpha - Cafeteria"
 
 [node name="TeamList0" type="ItemList" parent="VBoxContainer/HBoxContainer/TeamColumn0"]
-custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -59,7 +52,6 @@ horizontal_alignment = 1
 text = "Beta - Mensa"
 
 [node name="TeamList1" type="ItemList" parent="VBoxContainer/HBoxContainer/TeamColumn1"]
-custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -73,7 +65,6 @@ horizontal_alignment = 1
 text = "Gamma - T002"
 
 [node name="TeamList2" type="ItemList" parent="VBoxContainer/HBoxContainer/TeamColumn2"]
-custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -87,7 +78,6 @@ horizontal_alignment = 1
 text = "Delta - Exterior"
 
 [node name="TeamList3" type="ItemList" parent="VBoxContainer/HBoxContainer/TeamColumn3"]
-custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
 size_flags_vertical = 3
 
