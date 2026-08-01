@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scripts/rooms/room_base.gd" id="1_room"]
 [ext_resource type="Script" path="res://scripts/interaction/pickup_item.gd" id="2_pickup"]
 [ext_resource type="Script" path="res://scripts/interaction/door.gd" id="3_door"]
-[ext_resource type="Script" path="res://scripts/puzzles/keypad_puzzle.gd" id="4_keypad"]
+[ext_resource type="PackedScene" path="res://scenes/puzzles/keypad_puzzle.tscn" id="4_keypad_scene"]
 [ext_resource type="Script" path="res://scripts/inventory/item_data.gd" id="5_item"]
 
 [sub_resource type="Environment" id="Environment_caf1"]
@@ -175,8 +175,7 @@ shape = SubResource("BoxShape3D_table")
 
 [node name="Puzzles" type="Node3D" parent="."]
 
-[node name="KeypadPuzzle01" type="Node3D" parent="Puzzles"]
-script = ExtResource("4_keypad")
+[node name="KeypadPuzzle01" parent="Puzzles" instance=ExtResource("4_keypad_scene")]
 puzzle_id = "cafeteria_keypad_01"
 correct_code = "4719"
 position = Vector3(0, 1.2, 9.5)
