@@ -1,5 +1,7 @@
 extends RayCast3D
 
+const HIGHLIGHT_MATERIAL := preload("res://assets/materials/highlight_material.tres")
+
 @export var interact_distance := 3.0
 
 var current_target: Interactable = null
@@ -20,7 +22,9 @@ func _physics_process(_delta: float) -> void:
 			new_target = collider
 
 	if new_target != current_target:
+		_set_highlight(current_target, false)
 		current_target = new_target
+		_set_highlight(current_target, true)
 		_update_prompt()
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -36,6 +40,20 @@ func _request_interact(player_path: NodePath, interactable_path: NodePath) -> vo
 	var interactable := get_node_or_null(interactable_path) as Interactable
 	if interactable and player and interactable.can_interact(player):
 		interactable.interact(player)
+
+func _set_highlight(target: Interactable, enabled: bool) -> void:
+	if not target:
+		return
+	for mesh_instance in _find_mesh_instances(target):
+		mesh_instance.material_overlay = HIGHLIGHT_MATERIAL if enabled else null
+
+func _find_mesh_instances(node: Node) -> Array[MeshInstance3D]:
+	var result: Array[MeshInstance3D] = []
+	for child in node.get_children():
+		if child is MeshInstance3D:
+			result.append(child)
+		result.append_array(_find_mesh_instances(child))
+	return result
 
 func _update_prompt() -> void:
 	var hud := get_tree().get_first_node_in_group("hud")
