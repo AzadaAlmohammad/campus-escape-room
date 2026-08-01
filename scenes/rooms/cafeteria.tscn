@@ -1,0 +1,230 @@
+[gd_scene load_steps=25 format=3 uid="uid://vse5gqzaqql2a"]
+
+[ext_resource type="Script" path="res://scripts/rooms/room_base.gd" id="1_room"]
+[ext_resource type="Script" path="res://scripts/interaction/pickup_item.gd" id="2_pickup"]
+[ext_resource type="Script" path="res://scripts/interaction/door.gd" id="3_door"]
+[ext_resource type="Script" path="res://scripts/puzzles/keypad_puzzle.gd" id="4_keypad"]
+[ext_resource type="Script" path="res://scripts/inventory/item_data.gd" id="5_item"]
+
+[sub_resource type="Environment" id="Environment_caf1"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_floor"]
+albedo_color = Color(0.5, 0.5, 0.5, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wall"]
+albedo_color = Color(0.92, 0.92, 0.9, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_table"]
+albedo_color = Color(0.4, 0.26, 0.13, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_floor"]
+material = SubResource("StandardMaterial3D_floor")
+size = Vector2(20, 20)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_floor"]
+size = Vector3(20, 0.2, 20)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ceiling"]
+material = SubResource("StandardMaterial3D_wall")
+size = Vector2(20, 20)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ceiling"]
+size = Vector3(20, 0.2, 20)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wall_ns"]
+material = SubResource("StandardMaterial3D_wall")
+size = Vector3(20, 3, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wall_ns"]
+size = Vector3(20, 3, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wall_ew"]
+material = SubResource("StandardMaterial3D_wall")
+size = Vector3(0.2, 3, 20)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wall_ew"]
+size = Vector3(0.2, 3, 20)
+
+[sub_resource type="BoxMesh" id="BoxMesh_table"]
+material = SubResource("StandardMaterial3D_table")
+size = Vector3(2, 0.8, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_table"]
+size = Vector3(2, 0.8, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_note"]
+size = Vector3(0.2, 0.01, 0.15)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_note"]
+size = Vector3(0.2, 0.01, 0.15)
+
+[sub_resource type="BoxMesh" id="BoxMesh_door"]
+size = Vector3(1, 2.2, 0.1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_door"]
+size = Vector3(1, 2.2, 0.1)
+
+[sub_resource type="Resource" id="Resource_note_item"]
+script = ExtResource("5_item")
+item_id = &"note_cafeteria_code"
+item_name = "Notiz mit Code"
+description = "Eine zerknitterte Notiz: \"4-7-1-9\""
+is_key_item = false
+
+[node name="CafeteriaRoom" type="Node3D" groups=["room_cafeteria"]]
+script = ExtResource("1_room")
+room_id = "cafeteria"
+team_id = 0
+
+[node name="Environment" type="Node3D" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Environment"]
+environment = SubResource("Environment_caf1")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Environment"]
+rotation_degrees = Vector3(-45, -30, 0)
+shadow_enabled = true
+
+[node name="BuildingGeometry" type="Node3D" parent="."]
+
+[node name="Floor" type="StaticBody3D" parent="BuildingGeometry"]
+collision_layer = 1
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="BuildingGeometry/Floor"]
+mesh = SubResource("PlaneMesh_floor")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BuildingGeometry/Floor"]
+shape = SubResource("BoxShape3D_floor")
+position = Vector3(0, -0.1, 0)
+
+[node name="Walls" type="Node3D" parent="BuildingGeometry"]
+
+[node name="WallNorth" type="StaticBody3D" parent="BuildingGeometry/Walls"]
+collision_layer = 1
+position = Vector3(0, 1.5, -10)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="BuildingGeometry/Walls/WallNorth"]
+mesh = SubResource("BoxMesh_wall_ns")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BuildingGeometry/Walls/WallNorth"]
+shape = SubResource("BoxShape3D_wall_ns")
+
+[node name="WallSouth" type="StaticBody3D" parent="BuildingGeometry/Walls"]
+collision_layer = 1
+position = Vector3(0, 1.5, 10)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="BuildingGeometry/Walls/WallSouth"]
+mesh = SubResource("BoxMesh_wall_ns")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BuildingGeometry/Walls/WallSouth"]
+shape = SubResource("BoxShape3D_wall_ns")
+
+[node name="WallEast" type="StaticBody3D" parent="BuildingGeometry/Walls"]
+collision_layer = 1
+position = Vector3(10, 1.5, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="BuildingGeometry/Walls/WallEast"]
+mesh = SubResource("BoxMesh_wall_ew")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BuildingGeometry/Walls/WallEast"]
+shape = SubResource("BoxShape3D_wall_ew")
+
+[node name="WallWest" type="StaticBody3D" parent="BuildingGeometry/Walls"]
+collision_layer = 1
+position = Vector3(-10, 1.5, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="BuildingGeometry/Walls/WallWest"]
+mesh = SubResource("BoxMesh_wall_ew")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BuildingGeometry/Walls/WallWest"]
+shape = SubResource("BoxShape3D_wall_ew")
+
+[node name="Ceiling" type="StaticBody3D" parent="BuildingGeometry"]
+collision_layer = 1
+position = Vector3(0, 3, 0)
+rotation_degrees = Vector3(180, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="BuildingGeometry/Ceiling"]
+mesh = SubResource("PlaneMesh_ceiling")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BuildingGeometry/Ceiling"]
+shape = SubResource("BoxShape3D_ceiling")
+position = Vector3(0, 0.1, 0)
+
+[node name="Furniture" type="Node3D" parent="."]
+
+[node name="Table01" type="StaticBody3D" parent="Furniture"]
+collision_layer = 1
+position = Vector3(-4, 0.4, -6)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Furniture/Table01"]
+mesh = SubResource("BoxMesh_table")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Furniture/Table01"]
+shape = SubResource("BoxShape3D_table")
+
+[node name="Table02" type="StaticBody3D" parent="Furniture"]
+collision_layer = 1
+position = Vector3(4, 0.4, -6)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Furniture/Table02"]
+mesh = SubResource("BoxMesh_table")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Furniture/Table02"]
+shape = SubResource("BoxShape3D_table")
+
+[node name="Puzzles" type="Node3D" parent="."]
+
+[node name="KeypadPuzzle01" type="Node3D" parent="Puzzles"]
+script = ExtResource("4_keypad")
+puzzle_id = "cafeteria_keypad_01"
+correct_code = "4719"
+position = Vector3(0, 1.2, 9.5)
+
+[node name="PickupItems" type="Node3D" parent="."]
+
+[node name="NoteWithCode" type="StaticBody3D" parent="PickupItems"]
+collision_layer = 2
+position = Vector3(-4, 0.806, -6)
+script = ExtResource("2_pickup")
+display_name = "Notiz"
+interaction_prompt = "Aufheben"
+item_data = SubResource("Resource_note_item")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PickupItems/NoteWithCode"]
+mesh = SubResource("BoxMesh_note")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PickupItems/NoteWithCode"]
+shape = SubResource("BoxShape3D_note")
+
+[node name="Doors" type="Node3D" parent="."]
+
+[node name="ExitDoor" type="StaticBody3D" parent="Doors"]
+collision_layer = 2
+position = Vector3(0, 1.1, 9.9)
+script = ExtResource("3_door")
+is_locked = true
+display_name = "Ausgangstür"
+interaction_prompt = "Tür öffnen"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Doors/ExitDoor"]
+mesh = SubResource("BoxMesh_door")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Doors/ExitDoor"]
+shape = SubResource("BoxShape3D_door")
+
+[node name="SpawnPoints" type="Node3D" parent="."]
+
+[node name="Spawn1" type="Marker3D" parent="SpawnPoints"]
+position = Vector3(2, 0, 2)
+
+[node name="Spawn2" type="Marker3D" parent="SpawnPoints"]
+position = Vector3(-2, 0, 2)
+
+[node name="Spawn3" type="Marker3D" parent="SpawnPoints"]
+position = Vector3(2, 0, -2)
+
+[node name="Spawn4" type="Marker3D" parent="SpawnPoints"]
+position = Vector3(-2, 0, -2)
+
+[node name="Players" type="Node3D" parent="."]
