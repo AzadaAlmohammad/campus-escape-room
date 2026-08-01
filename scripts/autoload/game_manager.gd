@@ -13,6 +13,7 @@ func _ready() -> void:
 	game_timer.set_script(timer_script)
 	game_timer.name = "GameTimer"
 	add_child(game_timer)
+	game_timer.timer_expired.connect(_on_timer_expired)
 
 func start_game() -> void:
 	if not multiplayer.is_server():
@@ -41,6 +42,45 @@ func _load_room_for_team(team_id: int, room_id: String) -> void:
 @rpc("authority", "reliable", "call_local")
 func _change_state(new_state: int) -> void:
 	current_state = new_state as GameState
+	state_changed.emit(current_state)
+	if current_state == GameState.FINISHED:
+		_show_result_screen()
+
+func _on_timer_expired() -> void:
+	if not multiplayer.is_server():
+		return
+	if current_state == GameState.PLAYING:
+		_change_state.rpc(GameState.FINISHED)
+
+func _show_result_screen() -> void:
+	var result_scene := load("res://scenes/result_screen.tscn") as PackedScene
+	var result := result_scene.instantiate()
+	get_tree().root.add_child(result)
+	if _all_teams_escaped():
+		result.show_victory(TeamManager.teams)
+	else:
+		result.show_defeat()
+
+func restart_game() -> void:
+	if not multiplayer.is_server():
+		return
+	_restart_all.rpc()
+
+@rpc("authority", "reliable", "call_local")
+func _restart_all() -> void:
+	current_state = GameState.LOBBY
+	TeamManager.teams.clear()
+	for peer_id in NetworkManager.players:
+		NetworkManager.players[peer_id]["team_id"] = -1
+	var result_screen := get_tree().get_first_node_in_group("result_screen")
+	if result_screen:
+		result_screen.queue_free()
+	for room in get_tree().get_nodes_in_group("room"):
+		room.queue_free()
+	game_timer.is_running = false
+	var lobby_scene := load("res://scenes/lobby/lobby.tscn") as PackedScene
+	var lobby := lobby_scene.instantiate()
+	get_tree().root.add_child(lobby)
 	state_changed.emit(current_state)
 
 func check_team_escape(team_id: int) -> void:
