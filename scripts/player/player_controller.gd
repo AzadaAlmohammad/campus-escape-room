@@ -20,7 +20,6 @@ func _ready() -> void:
 	add_to_group("local_player")
 	$CameraRig/SpringArm3D/Camera3D.current = true
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-	add_to_group("local_player")
 
 func _physics_process(delta: float) -> void:
 	if not is_multiplayer_authority():
