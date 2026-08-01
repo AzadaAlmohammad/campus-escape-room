@@ -17,6 +17,7 @@ func _ready() -> void:
 		set_physics_process(false)
 		$CameraRig/SpringArm3D/Camera3D.current = false
 		return
+	add_to_group("local_player")
 	$CameraRig/SpringArm3D/Camera3D.current = true
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
@@ -47,10 +48,3 @@ func _physics_process(delta: float) -> void:
 		velocity.z = move_toward(velocity.z, 0, current_speed)
 
 	move_and_slide()
-
-func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("escape_menu"):
-		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-		else:
-			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
