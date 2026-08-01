@@ -20,6 +20,8 @@ func interact(player: CharacterBody3D) -> void:
 func _sync_door_state(open: bool, locked: bool) -> void:
 	is_open = open
 	is_locked = locked
+	if is_open:
+		SfxManager.play("door_open")
 	var tween := create_tween()
 	tween.tween_property(self, "rotation_degrees:y",
 		open_angle if is_open else 0.0, 0.5)

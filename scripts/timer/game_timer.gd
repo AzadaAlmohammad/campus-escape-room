@@ -8,6 +8,7 @@ signal timer_expired()
 var elapsed: float = 0.0
 var is_running: bool = false
 var _sync_timer: Timer
+var _last_warning_threshold: int = -1
 
 func _ready() -> void:
 	_sync_timer = Timer.new()
@@ -25,6 +26,7 @@ func _start_all(duration: float) -> void:
 	total_time_seconds = duration
 	elapsed = 0.0
 	is_running = true
+	_last_warning_threshold = -1
 	_sync_timer.start()
 
 func _process(delta: float) -> void:
@@ -33,6 +35,11 @@ func _process(delta: float) -> void:
 	elapsed += delta
 	var remaining := total_time_seconds - elapsed
 	timer_updated.emit(remaining)
+	if remaining <= 60.0 and remaining > 0.0:
+		var threshold := int(remaining / 10.0) * 10
+		if threshold != _last_warning_threshold:
+			_last_warning_threshold = threshold
+			SfxManager.play("timer_warning")
 	if remaining <= 0.0:
 		is_running = false
 		_sync_timer.stop()

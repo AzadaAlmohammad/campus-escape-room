@@ -33,6 +33,7 @@ func _validate_solution(data: Variant) -> bool:
 @rpc("authority", "reliable", "call_local")
 func _mark_solved() -> void:
 	is_solved = true
+	SfxManager.play("puzzle_solved")
 	_on_solved()
 	puzzle_solved.emit(puzzle_id)
 	if sends_cross_team_hint and multiplayer.is_server():

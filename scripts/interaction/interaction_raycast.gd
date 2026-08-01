@@ -30,6 +30,7 @@ func _physics_process(_delta: float) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("interact") and current_target:
 		if current_target.can_interact(get_parent()):
+			SfxManager.play("interact")
 			_request_interact.rpc_id(1, get_parent().get_path(), current_target.get_path())
 
 @rpc("any_peer", "reliable")
