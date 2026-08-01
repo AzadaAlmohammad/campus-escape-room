@@ -14,6 +14,20 @@ const TEAM_ROOMS := {
 	3: "exterior"
 }
 
+func _ready() -> void:
+	NetworkManager.player_disconnected.connect(_on_player_disconnected)
+
+func _on_player_disconnected(peer_id: int) -> void:
+	if not multiplayer.is_server():
+		return
+	var changed := false
+	for tid in teams:
+		if peer_id in teams[tid]["members"]:
+			teams[tid]["members"].erase(peer_id)
+			changed = true
+	if changed:
+		_sync_teams.rpc(teams)
+
 func setup_teams(num_teams: int) -> void:
 	teams.clear()
 	for i in range(num_teams):
