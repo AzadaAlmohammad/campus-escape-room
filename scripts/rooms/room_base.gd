@@ -7,6 +7,8 @@ extends Node3D
 var puzzles: Array[PuzzleBase] = []
 
 func _ready() -> void:
+	add_to_group("room")
+	add_to_group("room_%s" % room_id)
 	var puzzles_node := get_node_or_null("Puzzles")
 	if puzzles_node:
 		for child in puzzles_node.get_children():
