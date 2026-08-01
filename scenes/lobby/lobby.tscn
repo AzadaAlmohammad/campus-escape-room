@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://dqx7m2p9k4wsn"]
+[gd_scene load_steps=3 format=3 uid="uid://dqx7m2p9k4wsn"]
 
 [ext_resource type="Script" path="res://scripts/ui/lobby_ui.gd" id="1_lobby"]
+[ext_resource type="PackedScene" path="res://scenes/lobby/team_assignment.tscn" id="2_team_assign"]
 
 [node name="Lobby" type="Control"]
 anchors_preset = 15
@@ -72,3 +73,6 @@ custom_minimum_size = Vector2(300, 40)
 layout_mode = 2
 visible = false
 text = "Spiel starten"
+
+[node name="TeamAssignment" parent="." instance=ExtResource("2_team_assign")]
+visible = false
