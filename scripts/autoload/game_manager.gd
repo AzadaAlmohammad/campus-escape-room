@@ -43,8 +43,8 @@ func _load_room_for_team(team_id: int, room_id: String) -> void:
 	var lobby := get_tree().get_first_node_in_group("lobby")
 	if lobby:
 		lobby.queue_free()
-	if ResourceLoader.exists("res://scenes/hud.tscn"):
-		var hud_scene := load("res://scenes/hud.tscn") as PackedScene
+	if ResourceLoader.exists("res://scenes/ui/hud.tscn"):
+		var hud_scene := load("res://scenes/ui/hud.tscn") as PackedScene
 		var hud := hud_scene.instantiate()
 		get_tree().root.add_child(hud)
 
