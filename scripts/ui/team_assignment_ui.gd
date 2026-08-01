@@ -34,8 +34,8 @@ func refresh() -> void:
 		team_lists[i].clear()
 		for peer_id in TeamManager.get_team_members(i):
 			var player_name: String = NetworkManager.players.get(peer_id, {}).get("name", "?")
-			var idx := team_lists[i].add_item("%s (ID: %d)" % [player_name, peer_id])
-			team_lists[i].set_item_metadata(idx, peer_id)
+			team_lists[i].add_item("%s (ID: %d)" % [player_name, peer_id])
+			team_lists[i].set_item_metadata(team_lists[i].item_count - 1, peer_id)
 
 func auto_assign() -> void:
 	if not NetworkManager.is_host():
