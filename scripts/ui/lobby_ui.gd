@@ -7,6 +7,7 @@ extends Control
 @onready var player_list: ItemList = $VBoxContainer/PlayerList
 @onready var start_button: Button = $VBoxContainer/StartButton
 @onready var status_label: Label = $VBoxContainer/StatusLabel
+@onready var team_assignment: Control = $TeamAssignment
 
 func _ready() -> void:
 	add_to_group("lobby")
@@ -14,9 +15,12 @@ func _ready() -> void:
 	join_button.pressed.connect(_on_join_pressed)
 	start_button.pressed.connect(_on_start_pressed)
 	start_button.visible = false
+	start_button.disabled = true
+	team_assignment.visible = false
 	NetworkManager.player_connected.connect(_on_player_connected)
 	NetworkManager.player_disconnected.connect(_on_player_disconnected)
 	NetworkManager.connection_failed.connect(_on_connection_failed)
+	TeamManager.teams_updated.connect(_update_start_button)
 
 func _on_host_pressed() -> void:
 	var player_name := name_input.text.strip_edges()
@@ -28,7 +32,9 @@ func _on_host_pressed() -> void:
 		host_button.disabled = true
 		join_button.disabled = true
 		start_button.visible = true
+		team_assignment.visible = true
 		_refresh_player_list()
+		_update_start_button()
 	else:
 		status_label.text = "Failed to host: %s" % error_string(error)
 
@@ -44,25 +50,21 @@ func _on_join_pressed() -> void:
 		status_label.text = "Connecting to %s..." % address
 		host_button.disabled = true
 		join_button.disabled = true
+		team_assignment.visible = true
 	else:
 		status_label.text = "Failed to join: %s" % error_string(error)
 
 func _on_start_pressed() -> void:
 	if NetworkManager.is_host():
-		var num_players := NetworkManager.players.size()
-		var num_teams := clampi(ceili(num_players / 4.0), 1, 4)
-		TeamManager.setup_teams(num_teams)
-		var team_idx := 0
-		for peer_id in NetworkManager.players:
-			TeamManager.assign_player_to_team(peer_id, team_idx % num_teams)
-			team_idx += 1
 		GameManager.start_game()
 
 func _on_player_connected(_peer_id: int) -> void:
 	_refresh_player_list()
+	_update_start_button()
 
 func _on_player_disconnected(_peer_id: int) -> void:
 	_refresh_player_list()
+	_update_start_button()
 
 func _on_connection_failed() -> void:
 	status_label.text = "Connection failed!"
@@ -74,3 +76,18 @@ func _refresh_player_list() -> void:
 	for peer_id in NetworkManager.players:
 		var info: Dictionary = NetworkManager.players[peer_id]
 		player_list.add_item("%s (ID: %d)" % [info["name"], peer_id])
+
+func _update_start_button() -> void:
+	if not NetworkManager.is_host():
+		return
+	var all_assigned := NetworkManager.players.size() > 0
+	for peer_id in NetworkManager.players:
+		if TeamManager.get_player_team(peer_id) == -1:
+			all_assigned = false
+			break
+	var all_teams_staffed := not TeamManager.teams.is_empty()
+	for team_id in TeamManager.teams:
+		if TeamManager.teams[team_id]["members"].is_empty():
+			all_teams_staffed = false
+			break
+	start_button.disabled = not (all_assigned and all_teams_staffed)
