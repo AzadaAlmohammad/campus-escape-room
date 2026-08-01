@@ -21,6 +21,7 @@ NetworkManager="*res://scripts/autoload/network_manager.gd"
 GameManager="*res://scripts/autoload/game_manager.gd"
 TeamManager="*res://scripts/autoload/team_manager.gd"
 LanDiscovery="*res://scripts/autoload/lan_discovery.gd"
+SfxManager="*res://scripts/audio/sfx_manager.gd"
 
 [input]
 
