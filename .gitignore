@@ -1,0 +1,21 @@
+# Godot 4+ specific ignores
+.godot/
+*.import
+
+# Exported builds
+export/
+*.exe
+*.x86_64
+*.pck
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+*.swp
+*.swo
+
+# Blender backup files
+*.blend1

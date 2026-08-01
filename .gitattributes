@@ -1,0 +1,15 @@
+# Normalize EOL for GDScript
+*.gd text eol=lf
+*.tscn text eol=lf
+*.tres text eol=lf
+*.godot text eol=lf
+
+# Binary assets
+*.glb binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.svg binary
+*.ogg binary
+*.wav binary
+*.mp3 binary
