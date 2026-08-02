@@ -12,6 +12,7 @@ extends CharacterBody3D
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 func _ready() -> void:
+	add_to_group("players")
 	if not is_multiplayer_authority():
 		set_process_input(false)
 		set_physics_process(false)

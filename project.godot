@@ -22,6 +22,7 @@ GameManager="*res://scripts/autoload/game_manager.gd"
 TeamManager="*res://scripts/autoload/team_manager.gd"
 LanDiscovery="*res://scripts/autoload/lan_discovery.gd"
 SfxManager="*res://scripts/audio/sfx_manager.gd"
+AlarmSystem="*res://scripts/autoload/alarm_system.gd"
 
 [input]
 
@@ -81,6 +82,7 @@ escape_menu={
 3d_physics/layer_1="environment"
 3d_physics/layer_2="interactables"
 3d_physics/layer_3="players"
+3d_physics/layer_4="guards"
 
 [physics]
 

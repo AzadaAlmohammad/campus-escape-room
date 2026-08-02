@@ -1,0 +1,62 @@
+[gd_scene load_steps=8 format=3 uid="uid://cg1guard0bot01"]
+
+[ext_resource type="Script" path="res://scripts/ai/guard_bot.gd" id="1_guard"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_guard"]
+radius = 0.35
+height = 1.8
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_guard"]
+radius = 0.35
+height = 1.8
+
+[sub_resource type="StandardMaterial3D" id="Mat_guard"]
+albedo_color = Color(0.12, 0.15, 0.28, 1)
+roughness = 0.7
+
+[sub_resource type="BoxMesh" id="BoxMesh_visor"]
+size = Vector3(0.36, 0.1, 0.06)
+
+[sub_resource type="StandardMaterial3D" id="Mat_visor"]
+albedo_color = Color(0.9, 0.85, 0.4, 1)
+emission_enabled = true
+emission = Color(1, 0.9, 0.4, 1)
+emission_energy_multiplier = 1.5
+
+[sub_resource type="SceneReplicationConfig" id="RepConfig_guard"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/0/interpolate = true
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/1/interpolate = true
+
+[node name="GuardBot" type="CharacterBody3D" groups=["guards"]]
+collision_layer = 8
+collision_mask = 1
+script = ExtResource("1_guard")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_guard")
+position = Vector3(0, 0.9, 0)
+
+[node name="Body" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_guard")
+surface_material_override/0 = SubResource("Mat_guard")
+position = Vector3(0, 0.9, 0)
+
+[node name="Visor" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_visor")
+surface_material_override/0 = SubResource("Mat_visor")
+position = Vector3(0, 1.55, -0.32)
+
+[node name="StatusLight" type="OmniLight3D" parent="."]
+position = Vector3(0, 2.1, 0)
+light_color = Color(0.2, 0.8, 0.3, 1)
+light_energy = 3.0
+omni_range = 6.0
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("RepConfig_guard")

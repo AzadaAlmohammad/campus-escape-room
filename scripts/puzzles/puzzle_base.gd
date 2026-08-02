@@ -26,6 +26,11 @@ func attempt_solve(data: Variant = null) -> void:
 func _server_attempt_solve(data: Variant) -> void:
 	if _validate_solution(data):
 		_mark_solved.rpc()
+	else:
+		_on_failed_attempt(data)
+
+func _on_failed_attempt(_data: Variant) -> void:
+	pass
 
 func _validate_solution(data: Variant) -> bool:
 	return check_solution()

@@ -3,6 +3,8 @@ extends Node3D
 
 @export var room_id: String = ""
 @export var team_id: int = -1
+## Stand-in team members the server spawns so small groups aren't alone.
+@export var bot_teammates: int = 0
 
 var puzzles: Array[PuzzleBase] = []
 

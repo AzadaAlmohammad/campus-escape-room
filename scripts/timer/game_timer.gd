@@ -55,6 +55,15 @@ func _correct_time(server_elapsed: float) -> void:
 	if abs(diff) > 0.5:
 		elapsed = server_elapsed
 
+func apply_penalty(seconds: float) -> void:
+	if not multiplayer.is_server():
+		return
+	_apply_penalty.rpc(seconds)
+
+@rpc("authority", "reliable", "call_local")
+func _apply_penalty(seconds: float) -> void:
+	elapsed = minf(elapsed + seconds, total_time_seconds)
+
 func get_elapsed() -> float:
 	return elapsed
 

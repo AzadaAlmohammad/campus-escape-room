@@ -19,6 +19,7 @@ func start_game() -> void:
 	if not multiplayer.is_server():
 		return
 	_change_state.rpc(GameState.LOADING)
+	AlarmSystem.reset()
 	for team_id in TeamManager.teams:
 		if TeamManager.get_team_members(team_id).is_empty():
 			continue
