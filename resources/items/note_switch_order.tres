@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/inventory/item_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+item_id = &"note_switch_order"
+item_name = "Vergilbte Notiz"
+description = "Wartungsprotokoll Campustor: \"Schalterreihenfolge: GRÜN - ROT - BLAU. Den Torcode kennt nur das Hörsaal-Team.\""
+is_key_item = true

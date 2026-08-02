@@ -18,27 +18,33 @@ func _ready() -> void:
 	TeamManager.assign_player_to_team(1, 0)
 	print("TESTBOT: starting game...")
 	GameManager.start_game()
-	await get_tree().create_timer(5.0).timeout
-	await _verify()
+	await get_tree().create_timer(6.0).timeout
+	var room_id: String = TeamManager.TEAM_ROOMS[0]
+	if room_id == "exterior":
+		await _verify_exterior()
+	else:
+		print("TESTBOT_FAIL: unexpected room for team 0: %s" % room_id)
+		get_tree().quit(1)
 
-func _verify() -> void:
+func _verify_exterior() -> void:
 	if checks_done:
 		return
 	checks_done = true
 	var failed := 0
 
-	var room: Node = get_tree().get_first_node_in_group("room_cafeteria")
+	var room: Node = get_tree().get_first_node_in_group("room_exterior")
 	if room:
-		print("TESTBOT_OK: cafeteria room loaded")
+		print("TESTBOT_OK: exterior room loaded")
 	else:
-		print("TESTBOT_FAIL: cafeteria room not found")
-		failed += 1
+		print("TESTBOT_FAIL: exterior room not found")
+		get_tree().quit(1)
+		return
 
 	var player: Node3D = get_tree().get_first_node_in_group("local_player")
 	if player:
 		print("TESTBOT_OK: player spawned at %s" % player.global_position)
-		if player.global_position.y < -2.0:
-			print("TESTBOT_FAIL: player fell through floor (y=%s)" % player.global_position.y)
+		if player.global_position.y < -3.0:
+			print("TESTBOT_FAIL: player fell through ground (y=%s)" % player.global_position.y)
 			failed += 1
 	else:
 		print("TESTBOT_FAIL: player not spawned")
@@ -46,94 +52,58 @@ func _verify() -> void:
 
 	if player:
 		var space: PhysicsDirectSpaceState3D = player.get_world_3d().direct_space_state
-		var query := PhysicsRayQueryParameters3D.create(Vector3(1, 3, 0), Vector3(1, -10, 0))
-		query.collision_mask = 0xFFFFFFFF
-		var hit: Dictionary = space.intersect_ray(query)
-		if hit.is_empty():
-			print("TESTBOT_FAIL: NO floor collision under spawn point!")
-			failed += 1
-		else:
-			print("TESTBOT_OK: floor found at y=%s (collider=%s, layer=%s)" % [hit.position.y, hit.collider.name, hit.collider.collision_layer])
-		for probe in [Vector2(-13, 0), Vector2(-12, 0), Vector2(-11, 0), Vector2(10, 0), Vector2(11, 0), Vector2(12, 0), Vector2(0, 4), Vector2(0, 5), Vector2(0, 5.5), Vector2(0, 6), Vector2(0, -5), Vector2(0, -6), Vector2(0, -6.5), Vector2(9.8, -5.5), Vector2(10.3, 5.8)]:
-			var q := PhysicsRayQueryParameters3D.create(Vector3(probe.x, 6, probe.y), Vector3(probe.x, -10, probe.y))
+		for probe in [Vector2(114, -41), Vector2(116, -41), Vector2(114, -43), Vector2(116, -43), Vector2(112, -38), Vector2(120, -38), Vector2(116, -44), Vector2(116, -36), Vector2(110, -40), Vector2(122, -40)]:
+			var q := PhysicsRayQueryParameters3D.create(Vector3(probe.x, 30, probe.y), Vector3(probe.x, -20, probe.y))
 			var h: Dictionary = space.intersect_ray(q)
 			if h.is_empty():
-				print("TESTBOT_PROBE: (%s, %s) -> NO FLOOR" % [probe.x, probe.y])
+				print("TESTBOT_PROBE: (%s, %s) -> NO GROUND" % [probe.x, probe.y])
 			else:
 				print("TESTBOT_PROBE: (%s, %s) -> y=%.2f (%s)" % [probe.x, probe.y, h.position.y, h.collider.name])
-		print("TESTBOT_INFO: %d StaticBody3D nodes in tree" % _count_static_bodies(get_tree().root))
 
-	if room:
-		var puzzles: Array = room.puzzles
-		print("TESTBOT_OK: %d puzzles registered" % puzzles.size())
-		if puzzles.size() != 3:
-			print("TESTBOT_FAIL: expected 3 puzzles, got %d" % puzzles.size())
-			failed += 1
-		var keypad: Node = room.get_node_or_null("Puzzles/KeypadPuzzle01")
-		if keypad and keypad.get_node_or_null("Display/DisplayLabel"):
-			print("TESTBOT_OK: keypad has display")
+	var puzzles: Array = room.puzzles
+	print("TESTBOT_OK: %d puzzles registered" % puzzles.size())
+	if puzzles.size() != 2:
+		print("TESTBOT_FAIL: expected 2 puzzles, got %d" % puzzles.size())
+		failed += 1
+
+	var switches: Node = room.get_node_or_null("Puzzles/SwitchPuzzle")
+	if switches:
+		print("TESTBOT: pressing switches green-red-blue...")
+		for idx in [1, 0, 2]:
+			switches.add_to_sequence(idx)
+		await get_tree().create_timer(0.5).timeout
+		if switches.is_solved:
+			print("TESTBOT_OK: switch sequence solved")
 		else:
-			print("TESTBOT_FAIL: keypad display missing")
+			print("TESTBOT_FAIL: switch sequence not solved")
 			failed += 1
-		var fuse: Node = room.get_node_or_null("PickupItems/Sicherung")
-		if fuse and fuse.is_active == false and fuse.visible == false:
-			print("TESTBOT_OK: fuse hidden at start")
+	else:
+		print("TESTBOT_FAIL: SwitchPuzzle not found")
+		failed += 1
+
+	var keypad: Node = room.get_node_or_null("Puzzles/GateKeypad")
+	if keypad:
+		print("TESTBOT: entering gate code 592...")
+		for digit in ["5", "9", "2"]:
+			keypad.enter_digit(digit)
+		await get_tree().create_timer(0.5).timeout
+		if keypad.is_solved:
+			print("TESTBOT_OK: gate keypad solved with 592")
 		else:
-			print("TESTBOT_FAIL: fuse should start hidden")
+			print("TESTBOT_FAIL: gate keypad not solved")
 			failed += 1
-		if keypad:
-			print("TESTBOT: solving keypad...")
-			for digit in ["4", "7", "1", "9"]:
-				keypad.enter_digit(digit)
-			await get_tree().create_timer(0.5).timeout
-			if keypad.is_solved:
-				print("TESTBOT_OK: keypad solved with 4719")
-			else:
-				print("TESTBOT_FAIL: keypad not solved after entering 4719")
-				failed += 1
-			if fuse and fuse.is_active and fuse.visible:
-				print("TESTBOT_OK: fuse activated after keypad solved")
-			else:
-				print("TESTBOT_FAIL: fuse not activated after keypad solved")
-				failed += 1
-		var piano: Node = room.get_node_or_null("Puzzles/PianoPuzzle")
-		if piano:
-			print("TESTBOT: solving piano sequence...")
-			for idx in [0, 2, 1, 3]:
-				piano.add_to_sequence(idx)
-			await get_tree().create_timer(0.5).timeout
-			if piano.is_solved:
-				print("TESTBOT_OK: piano sequence solved")
-			else:
-				print("TESTBOT_FAIL: piano sequence not solved")
-				failed += 1
-		var automat: Node = room.get_node_or_null("Puzzles/AutomatPuzzle")
-		if automat and player:
-			var fuse_item: Resource = load("res://resources/items/fuse_cafeteria.tres")
-			var inv: Node = player.get_node_or_null("Inventory")
-			if inv:
-				inv.add_item(fuse_item)
-				automat.place_item(fuse_item, player)
-				await get_tree().create_timer(0.5).timeout
-				if automat.is_solved:
-					print("TESTBOT_OK: automat fuse puzzle solved")
-				else:
-					print("TESTBOT_FAIL: automat puzzle not solved")
-					failed += 1
-		var exit_door: Node = room.get_node_or_null("Doors/ExitDoor")
-		if exit_door:
-			await get_tree().create_timer(0.5).timeout
-			if exit_door.is_locked == false:
-				print("TESTBOT_OK: exit door unlocked after all puzzles")
-			else:
-				print("TESTBOT_FAIL: exit door still locked after all puzzles solved")
-				failed += 1
+	else:
+		print("TESTBOT_FAIL: GateKeypad not found")
+		failed += 1
+
+	var exit_door: Node = room.get_node_or_null("Doors/ExitDoor")
+	if exit_door:
+		await get_tree().create_timer(0.5).timeout
+		if exit_door.is_locked == false:
+			print("TESTBOT_OK: campus gate unlocked after all puzzles")
+		else:
+			print("TESTBOT_FAIL: campus gate still locked")
+			failed += 1
 
 	print("TESTBOT_RESULT: %d failures" % failed)
 	get_tree().quit(1 if failed > 0 else 0)
-
-func _count_static_bodies(node: Node) -> int:
-	var count := 1 if node is StaticBody3D else 0
-	for child in node.get_children():
-		count += _count_static_bodies(child)
-	return count

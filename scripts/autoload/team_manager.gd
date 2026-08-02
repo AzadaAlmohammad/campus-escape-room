@@ -8,10 +8,10 @@ var teams: Dictionary = {}
 
 const TEAM_NAMES := ["Alpha", "Beta", "Gamma", "Delta"]
 const TEAM_ROOMS := {
-	0: "cafeteria",
+	0: "exterior",
 	1: "mensa",
 	2: "t002",
-	3: "exterior"
+	3: "cafeteria"
 }
 
 func _ready() -> void:
