@@ -14,7 +14,6 @@ var _status_light_material: StandardMaterial3D
 var _blink_tween: Tween
 
 func _ready() -> void:
-	super._ready()
 	display_name = "Cross-Team Terminal"
 	interaction_prompt = "Terminal öffnen"
 	_status_light_material = status_light.get_surface_override_material(0).duplicate()

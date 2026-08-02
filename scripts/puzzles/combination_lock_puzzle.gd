@@ -8,7 +8,6 @@ extends PuzzleBase
 var current_values: Array[int] = []
 
 func _ready() -> void:
-	super._ready()
 	current_values.resize(num_dials)
 	current_values.fill(0)
 
